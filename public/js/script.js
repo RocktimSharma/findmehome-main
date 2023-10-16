@@ -16,6 +16,8 @@
           longit = position.coords.longitude;
           // this is just a marker placed in that position
           marker = L.marker([position.coords.latitude, position.coords.longitude]).addTo(map);
+          $('#latitude').val(position.coords.latitude);
+          $('#longitude').val(position.coords.longitude);
           // move the map to have the location in its center
           map.panTo(new L.LatLng(latit, longit));
       }) 
@@ -26,6 +28,33 @@ const searchControl = L.Control.geocoder({
     defaultMarkGeocode: false,
 }).addTo(map);
 
+
+map.on('click', function(e) {
+  if (marker) {
+      map.removeLayer(marker);
+  }
+
+  // Update the marker's position when the map is clicked
+  const location = e.latlng;
+
+  // Create a marker at the selected location
+  marker = L.marker(location).addTo(map);
+
+  // You can also open a popup with additional information if needed
+  marker.bindPopup('Selected Location').openPopup();
+
+  // Set the map view to the selected location
+  map.setView(location, 13);
+
+  // Update the latitude and longitude input fields in your form
+  try {
+      $('#latitude').val(location.lat);
+      $('#longitude').val(location.lng);
+      console.log(location.lat)
+  } catch(ex) {
+      console.error(ex);
+  }
+});
 
 searchControl.on('markgeocode', function (e) {
     // Clear the previous marker, if it exists

@@ -41,4 +41,9 @@ Route::get('register-owner', function () {
 Auth::routes();
 
 Route::get('/', [App\Http\Controllers\HomeController::class, 'index'])->name('home');
+
+Route::get('/add-pg', 'App\Http\Controllers\PGController@create');
+Route::post('/add-pg', 'App\Http\Controllers\PGController@store');
+
+
 ?>

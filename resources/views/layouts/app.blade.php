@@ -20,6 +20,7 @@
 
 <!-- Leaflet Control Geocoder CSS -->
 <link rel="stylesheet" href="https://unpkg.com/leaflet-control-geocoder@1.13.0/dist/Control.Geocoder.css" />
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 
 <!-- Leaflet JavaScript -->
 <script src="https://unpkg.com/leaflet@1.7.1/dist/leaflet.js"></script>

@@ -25,11 +25,22 @@
 <!-- Leaflet JavaScript -->
 <script src="https://unpkg.com/leaflet@1.7.1/dist/leaflet.js"></script>
 
+<link
+  rel="stylesheet"
+  href="https://unpkg.com/leaflet-routing-machine@3.2.12/dist/leaflet-routing-machine.css"
+/>
+<link rel="stylesheet" href="https://code.jquery.com/ui/1.12.1/themes/base/jquery-ui.css">
+ 
+<script src="https://unpkg.com/leaflet@1.7.1/dist/leaflet.js"></script>
+<script src="https://unpkg.com/leaflet-routing-machine@3.2.12/dist/leaflet-routing-machine.js"></script>
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+  
+
 <!-- Leaflet Control Geocoder JavaScript -->
 <script src="https://unpkg.com/leaflet-control-geocoder@1.13.0/dist/Control.Geocoder.js"></script>
 
     <!-- Scripts -->
-    @vite(['resources/sass/app.scss', 'resources/js/app.js'])
+   @vite(['resources/css/app.css', 'resources/js/app.js'])
 </head>
 <body>
     <div id="app">
@@ -37,7 +48,21 @@
             @yield('content')
         </main>
     </div>
+    <!-- bootstrap5 dataTables js cdn -->
+<script src='https://code.jquery.com/jquery-3.5.1.js'></script>
+<script src='https://cdn.datatables.net/1.13.4/js/jquery.dataTables.min.js'></script>
+<script src='https://cdn.datatables.net/1.13.4/js/dataTables.bootstrap5.min.js'></script>
+
+    <script
+      src="https://kit.fontawesome.com/d373bb95a9.js"
+      crossorigin="anonymous"
+    ></script>
+    <script src="https://js.pusher.com/7.0/pusher.min.js"></script>
+
+
     <script src="{{ asset('js/script.js') }}"></script>
+
+ 
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js" integrity="sha384-C6RzsynM9kWDrMNeT87bh95OGNyZPhcTNXj1NW7RuBCsyN/o0jlpcV8Qyq46cDfL" crossorigin="anonymous"></script>
  
 </body>

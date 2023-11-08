@@ -9,15 +9,19 @@ class PG extends Model
 {
     use HasFactory;
     protected $table = 'pgs';
+    protected $primaryKey = 'pg_id';
     protected $fillable = [
         'name', // Add 'name' to the $fillable array
         'latitude',
         'longitude',
         'owner_id',
         'contact_details',
-        'amenities',
         'rules_restrictions',
         'description',
-        'other_details',
+       
+      
     ];
+    public function rooms() {
+        return $this->hasMany(Room::class, 'pg_id', 'pg_id');
+    }
 }

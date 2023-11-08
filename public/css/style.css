@@ -1,3 +1,11 @@
+/*
+#053B50
+#176B87
+#64CCC5
+#EEEEEE
+#C8FFE0
+*/
+
 .fill-y{
     min-height: 100vh;
     
@@ -5,6 +13,10 @@
 .carousel-item img{
     height: 70vh;
     object-fit: cover;
+}
+
+nav{
+    background-color: #053B50;
 }
 
 #map {
@@ -15,4 +27,168 @@
   .leaflet-control-geocoder {
     width: 300px;
     margin: 10px;
+}
+
+.chat-btn{
+
+  
+    background-color: #176b87;
+   
+}
+
+.secondary-bg{
+ background-color: #eeeeee;
+ color: #053B50;
+}
+
+.primary-bg{
+    background-color: #053B50;
+    color: #ffffff;
+}
+
+.route-btn{
+
+
+    background-color: #053B50;
+  
+}
+.room-card img{
+   height: 200px;
+   width: 100%;
+}
+
+.primary-btn{
+    background-color: #053B50;
+    color: #ffffff;
+}
+
+
+
+
+.primary-btn:hover{
+    color: #ffffff;
+    background-color: #176b87;
+}
+
+.secondary-btn{
+    background-color: #ffffff;
+    color: #176b87;
+}
+
+.secondary-btn:hover{
+    color: #ffffff;
+    background-color: #176b87;
+}
+
+.card-footer .btn{
+    text-decoration: none;
+    color: #ffffff;
+    border-radius: 0;
+
+}
+.card-footer .btn:hover{
+    background-color: #64CCC5;
+    color: #053B50;
+}
+
+.content-box{
+    position: -webkit-sticky;
+    position: sticky;
+    height: calc(100vh - 20px); ;
+    top: 0;
+    overflow-y: hidden;
+}
+
+.filter-box{
+  background-color: #EEEEEE;
+  box-shadow: 2px 3px 10px #cccccc;
+  border-radius: 5px;
+}
+
+.filter-box label,.form-control,.form-control:focus,.form-check-input{
+   border-color: #aaaaaa;
+   box-shadow: none;
+  
+   
+}
+
+.message {
+    margin: 10px;
+    padding: 5px;
+    display: block;
+    border: 1px solid #ccc;
+ max-width: 40%;
+}
+
+.sent {
+    background-color: #e6f7ff;
+    float: right;
+}
+
+.received {
+    background-color: #f2f2f2;
+    float: left;
+    clear: both;
+}
+
+/* Adjust these styles to fit your design and layout preferences. */
+
+
+.filter-box .form-check-input:checked{
+    background-color: #053B50;
+    border-color: #053B50;
+
+}
+
+.filter-box .form-check-label{
+    color: #555;
+    font-size:small;
+}
+
+.filter-box button{
+    background-color: #053B50;
+    border: none;
+
+}
+.filter-box button:hover{
+    background-color: #176b87;
+    border: none;
+    
+}
+
+.sticky-top{
+    
+}
+
+#pgList{
+    height: calc(100vh - 60px);
+    overflow-y: scroll;
+    scrollbar-width: 0;
+    -ms-overflow-style: none;
+}
+
+#pgList .chips{
+
+}
+
+#pgList::-webkit-scrollbar {
+    display: none;
+}
+
+.form-header{
+    background-color: #053B50;
+    color: #ffffff;
+}
+
+.msg-body{
+    height: calc(100vh - 110px); 
+    overflow-y: auto;
+}
+
+.msg-body #messagesList{
+    height: 100%;
+}
+
+.convo .card-header{
+    border-radius: 0 !important;
 }

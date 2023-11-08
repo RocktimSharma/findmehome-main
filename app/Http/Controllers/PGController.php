@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\DB;
 use App\Models\PG; // Import the PG model
 
 class PGController extends Controller
@@ -14,9 +15,98 @@ class PGController extends Controller
         return view('addPg');
     }
 
- 
 
+    public function search(Request $request)
+    {
+        $latitude = $request->input('latitude');
+        $longitude = $request->input('longitude');
+        
+        // Set the search radius to 50 kilometers
+        $radius = 50;
+        $minRoomPrice=$request->input('minRoomPrice');
+        $maxRoomPrice=$request->input('maxRoomPrice');
+        $roomTypes=$request->input('roomType');
+        $amenities=$request->input('amenities');
+
+        $owner = Auth::user();
+        
+      /*  $pgs = DB::table('pgs')
+    ->select('pgs.*', 'room.room_type', 'room.room_price', 'room.amenities')
+    ->selectRaw(
+        '(
+            6371 * acos(
+                cos(radians(?)) * cos(radians(pgs.latitude)) * cos(radians(pgs.longitude) - radians(?)) + sin(radians(?)) * sin(radians(pgs.latitude))
+            )
+        ) AS distance',
+        [$latitude, $longitude, $latitude]
+    )
+    ->join('room', 'pgs.pg_id', '=', 'room.pg_id')
+    ->where('room.availability_status', '=', 'available')
+    ->having('distance', '<', $radius)
+    ->get();*/
+
+    $pgs = DB::table('pgs')
+    ->select('pgs.*', 'room.room_type', 'room.room_price', 'room.amenities','room.image1','users.id')
+    ->selectRaw(
+        '(
+            6371 * acos(
+                cos(radians(?)) * cos(radians(pgs.latitude)) * cos(radians(pgs.longitude) - radians(?)) + sin(radians(?)) * sin(radians(pgs.latitude))
+            )
+        ) AS distance',
+        [$latitude, $longitude, $latitude]
+    )
+    ->join('room', 'pgs.pg_id', '=', 'room.pg_id')
+    ->join('users','pgs.owner_id','=','users.id')
+    ->where('room.availability_status', '=', 'available')
+    ->where(function ($query) use ($minRoomPrice, $maxRoomPrice, $roomTypes, $amenities,$owner) {
+        if ($minRoomPrice) {
+            $query->where('room.room_price', '>=', $minRoomPrice);
+        }
+
+        if ($maxRoomPrice) {
+            $query->where('room.room_price', '<=', $maxRoomPrice);
+        }
+
+  
+
+        if (!empty($roomTypes)) {
+            $query->where(function ($query) use ($roomTypes) {
+                foreach ($roomTypes as $roomType) {
+                    $query->orWhere('room.room_type','=', $roomType);
+                }
+            });
+        }
+
+        if (!empty($amenities)) {
+            $query->where(function ($query) use ($amenities) {
+                foreach ($amenities as $amenity) {
+                    $query->orWhere('room.amenities', 'like', '%' . $amenity . '%');
+                }
+            });
+        }
+        $query->where('pgs.owner_id', '!=', $owner->id);
+    })
+    ->having('distance', '<', $radius)
+   
+    ->get();
+
+        
+        return response()->json($pgs);
+    }
+    
+    
+    
+    
 // ...
+
+public function destroy(PG $pg)
+{
+    // Delete the room
+    $pg->delete();
+
+    // Redirect to a page after deleting the room
+    return redirect()->back()->with('success', 'Room deleted successfully.');
+}
 
 public function store(Request $request)
 {
@@ -31,13 +121,18 @@ public function store(Request $request)
             'latitude' => 'required|string',
             'longitude' => 'required|string',
             'contact_details' => 'required|string',
-            'amenities' => 'required|string',
             'rules_restrictions' => 'required|string',
             'description' => 'required|string',
-            'other_details' => 'required|string',
+         
+           
         ]);
+
+        $validatedData['owner_id'] = $owner->id;
+
  
         // Create a new Pg model instance and populate it with the validated data
+           // Handle image upload
+  
         $pg = new PG($validatedData);
  
         // Save the map coordinates

@@ -10,11 +10,11 @@ use Illuminate\Support\Facades\Hash;
 
 class AuthManager extends Controller
 {
-    function login1(){
+    function login(){
         return view('login');
     }
 
-    function login1Post(Request $request){
+    function loginPost(Request $request){
         $request->validate([
             'email'=>'required',
             'password'=>'required'
@@ -23,17 +23,17 @@ class AuthManager extends Controller
         $credential=$request->only('email','password');
 
         if(Auth::attempt($credential)){
-            return redirect()->intended(route('/'));
+            return redirect('/');
         }
         return redirect()->intended(route('login'))->with("error", "Login details not valid");
 
     }
 
-    function registration1(){
+    function registration(){
         return view('registration');
     }
 
-    function registration1Post(Request $request){
+    function registrationPost(Request $request){
         $request->validate([
             'name'=>'required',
             'email'=>'required|email|unique:users',

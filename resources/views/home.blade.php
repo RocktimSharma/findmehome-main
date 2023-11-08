@@ -2,93 +2,23 @@
 
 @section('content')
 
-<div class="">
-         <!-- Modal -->
-<div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
-  <div class="modal-dialog modal-xl">
-    <div class="modal-content">
-      <div class="modal-header">
+<div class=""> 
+  <!-- Modal --> 
+<div class="modal fade" id="exampleModal" tabindex="-1"
+  aria-labelledby="exampleModalLabel" aria-hidden="true">
+  <div class="modal-dialog modal-xl"> 
+    <div class="modal-content"> 
+      <div class="modal-header"> 
         <h1 class="modal-title fs-5" id="exampleModalLabel">Location</h1>
         <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-      </div>
-      <div class="modal-body">
-      <div id="map"></div>
-      </div>
-      <div class="modal-footer">
-        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
-        <button type="button" class="btn btn-primary">Save changes</button>
-      </div>
-    </div>
+    </div> <div class="modal-body"> <div id="map">
   </div>
-</div>
-        <nav class="navbar navbar-expand-md navbar-light bg-white shadow-sm">
-            <div class="container">
-                <a class="navbar-brand" href="{{ url('/') }}">
-                    {{ config('app.name', 'Find Me Home') }}
-                </a>
-                <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="{{ __('Toggle navigation') }}">
-                    <span class="navbar-toggler-icon"></span>
-                </button>
-
-                <div class="collapse navbar-collapse" id="navbarSupportedContent">
-                    <!-- Left Side Of Navbar -->
-                    <ul class="navbar-nav me-auto">
-                    <li class="nav-item">
-          <a class="btn btn-outline-dark" data-bs-toggle="modal" data-bs-target="#exampleModal" aria-current="page" href="#">Location</a>
-        </li>
-                    </ul>
-
-                    <!-- Right Side Of Navbar -->
-                    <ul class="navbar-nav ms-auto">
-                        <!-- Authentication Links -->
-                        @guest
-                            @if (Route::has('login'))
-                                <li class="nav-item">
-                                    <a class="nav-link" href="{{ route('login') }}">{{ __('Login') }}</a>
-                                </li>
-                            @endif
-
-                            @if (Route::has('register'))
-                                <li class="nav-item">
-                                    <a class="nav-link" href="{{ route('register') }}">{{ __('Register') }}</a>
-                                </li>
-                            @endif
-                        @else
-                            <li class="nav-item dropdown">
-                                <a id="navbarDropdown" class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false" v-pre>
-                                    {{ Auth::user()->name }}
-                                </a>
-
-                                <div class="dropdown-menu dropdown-menu-end" aria-labelledby="navbarDropdown">
-                                    <a class="dropdown-item" href="{{ route('logout') }}"
-                                       onclick="event.preventDefault();
-                                                     document.getElementById('logout-form').submit();">
-                                        {{ __('Logout') }}
-                                    </a>
-
-                                    <a class="dropdown-item" 
-                                       >
-                                        {{ __('Account') }}
-                                    </a>
-                                    <a class="dropdown-item" 
-                                       >
-                                        {{ __('Wishlist') }}
-                                    </a>
-                                    <a class="dropdown-item" 
-                                       >
-                                        {{ __('Rooms') }}
-                                    </a>
-
-                                    <form id="logout-form" action="{{ route('logout') }}" method="POST" class="d-none">
-                                        @csrf
-                                    </form>
-                                </div>
-                            </li>
-                        @endguest
-                    </ul>
-                </div>
-            </div>
-        </nav>
+  </div> <div class="modal-footer"> <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">
+  Close</button>
+  <button type="button" class="btn btn-primary">Save changes</button> </div> </div>
+    </div> 
+  </div> 
+  @include('layouts.navbar')
 
 
 <div id="carouselExampleAutoplaying" class="carousel slide" data-bs-ride="carousel">
@@ -113,6 +43,82 @@
   </button>
 </div>
 
+
+<div class="container-fluid content-box"  >
+ 
+<p class="fs-3 fw-bold m-5 mb-0">PGs Avialable near you</p>
+<div class="container-fluid px-5 mt-4">
+  <div class="row">
+    <div class="col-md-2 mb-4 filter-box py-4">
+      <form id="filterForm" method="GET">
+        <div class="form-group mb-3">
+          <label for="minRoomPrice">Minimum Room Price:</label>
+          <input type="number" name="minRoomPrice" id="minRoomPrice" class="form-control">
+        </div>
+
+        <div class="form-group mb-3">
+          <label for="maxRoomPrice">Maximum Room Price:</label>
+          <input type="number" name="maxRoomPrice" id="maxRoomPrice" class="form-control">
+        </div>
+
+     
+
+        <div class="form-group mb-3">
+          <label>Room Type</label><br>
+          <div class="form-check form-check-inline">
+            <input class="form-check-input" type="checkbox" name="roomType[]" value="Single" id="single">
+            <label class="form-check-label" for="single">Single</label>
+          </div>
+          <div class="form-check form-check-inline">
+            <input class="form-check-input" type="checkbox" name="roomType[]" value="Double" id="double">
+            <label class="form-check-label" for="double">Double</label>
+          </div>
+          <div class="form-check form-check-inline">
+            <input class="form-check-input" type="checkbox" name="roomType[]" value="" id="other">
+            <label class="form-check-label" for="other">Other</label>
+          </div>
+        </div>
+
+        <div class="form-group mb-3">
+          <label>Amenities</label><br>
+          <div class="form-check form-check-inline">
+            <input class="form-check-input" type="checkbox" name="amenities[]" value="Wi-Fi" id="wifi">
+            <label class="form-check-label" for="wifi">Wi-Fi</label>
+          </div>
+          <div class="form-check form-check-inline">
+            <input class="form-check-input" type="checkbox" name="amenities[]" value="TV" id="tv">
+            <label class="form-check-label" for="tv">TV</label>
+          </div>
+          <div class="form-check form-check-inline">
+            <input class="form-check-input" type="checkbox" name="amenities[]" value="Air Conditioning" id="ac">
+            <label class="form-check-label" for="ac">Air Conditioning</label>
+          </div>
+          <div class="form-check form-check-inline">
+            <input class="form-check-input" type="checkbox" name="amenities[]" value="24-hour Water" id="ac">
+            <label class="form-check-label" for="ac">24-hour Water</label>
+          </div>
+          <div class="form-check form-check-inline">
+            <input class="form-check-input" type="checkbox" name="amenities[]" value="24-hour Electricity" id="ac">
+            <label class="form-check-label" for="ac">24-hour Electricity</label>
+          </div>
+        </div>
+        <div class="d-flex justify-content-center">
+        <button type="submit" class="btn btn-primary">Apply Filters</button>
+</div>
+      </form>
+
+    </div>
+    <div class="col-sm-10 mb-4 pg-box">
+
+      <div class="row" id="pgList">
+
+
+      </div>
+    </div>
+  </div>
+</div>
+
+</div>
 </div>
 
 @endsection

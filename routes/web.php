@@ -3,7 +3,7 @@
 use App\Http\Controllers\AuthManager;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\UserPgController;
-
+use Illuminate\Support\Facades\Broadcast;
 /*
 |--------------------------------------------------------------------------
 | Web Routes
@@ -15,12 +15,16 @@ use App\Http\Controllers\UserPgController;
 |
 */
 
+Broadcast::routes(['middleware' => ['auth']]);  // Add this line inside the Route group
 
 
 Route::get('conn', function () {
     return view('conn');
 });
 
+Route::post('/broadcasting/auth', function () {
+    return auth()->check() ? auth()->user() : abort(403);
+});
 
 
 /*Route::get('/registration1', function () {
@@ -37,6 +41,7 @@ Route::post('/registration', [AuthManager::class, 'registrationPost'])->name('re
 Route::get('register-owner', function () {
     return view('registerowner');
 });
+
 
 
 Auth::routes();
@@ -57,13 +62,20 @@ Route::group(['middleware' => ['auth']], function () {
     Route::delete('/rooms/{room}', 'App\Http\Controllers\RoomController@destroy')->name('roomDelete');
     Route::delete('/pg/{pg}', 'App\Http\Controllers\PGController@destroy')->name('pgDelete');
 
-    Route::get('/conversations/{recipientId}', 'App\Http\Controllers\ChatController@showConversation');
-    Route::post('/conversations/{recipientId}', 'App\Http\Controllers\ChatController@sendMessage')->name('conversation');
+    Route::get('/conversations/{recipientId}/{pgId}', 'App\Http\Controllers\ChatController@showConversation')->name('allChats');
+    Route::post('/send/{recipientId}/{pgId}', 'App\Http\Controllers\ChatController@sendMessage')->name('conversation');
     
 
-
+    Route::get('/generate-token', function () {
+        $user = Auth::user();
+        $token = $user->createToken('Token')->accessToken;
+        
+        return response()->json(['access_token' => $token]);
+    });
 
 });
+
+
 
 
 

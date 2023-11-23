@@ -40,6 +40,13 @@
 <script src="https://unpkg.com/leaflet-control-geocoder@1.13.0/dist/Control.Geocoder.js"></script>
 
     <!-- Scripts -->
+   <script>
+    window.PUSHER_APP_KEY = "{{ env('PUSHER_APP_KEY') }}";
+    window.PUSHER_APP_CLUSTER = "{{ env('PUSHER_APP_CLUSTER') }}";
+</script>
+<script src="https://js.pusher.com/7.0/pusher.min.js"></script>
+
+
    @vite(['resources/css/app.css', 'resources/js/app.js'])
 </head>
 <body>
@@ -57,8 +64,6 @@
       src="https://kit.fontawesome.com/d373bb95a9.js"
       crossorigin="anonymous"
     ></script>
-    <script src="https://js.pusher.com/7.0/pusher.min.js"></script>
-
 
     <script src="{{ asset('js/script.js') }}"></script>
 

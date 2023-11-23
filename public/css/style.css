@@ -111,24 +111,33 @@ nav{
   
    
 }
-
+.sender-name{
+    font-size: 14px;
+    color: #ccc;
+}
 .message {
     margin: 10px;
-    padding: 5px;
+    padding: 5px 20px;
     display: block;
     border: 1px solid #ccc;
- max-width: 40%;
+    max-width: 40%;
+    border-radius: 30px;
+    border: none;
 }
 
 .sent {
-    background-color: #e6f7ff;
-    float: right;
+    background: linear-gradient(to right, #C8FFE0, #64CCC5);
+    color: #000000;
+    border-bottom-right-radius: 0px;
+
+   
 }
 
 .received {
-    background-color: #f2f2f2;
-    float: left;
-    clear: both;
+    background: linear-gradient(to right, #64CCC5, #176B87ee);
+    color: #FFFFFF; 
+    border-top-left-radius: 0;
+  
 }
 
 /* Adjust these styles to fit your design and layout preferences. */
@@ -181,7 +190,7 @@ nav{
 }
 
 .msg-body{
-    height: calc(100vh - 110px); 
+    height: calc(100vh - 140px); 
     overflow-y: auto;
 }
 
@@ -191,4 +200,52 @@ nav{
 
 .convo .card-header{
     border-radius: 0 !important;
+   
+    
+}
+
+.all-chat-container{
+   height: 100vh;
+   overflow-y: scroll;
+   background-color: #022e40;
+
+}
+
+.all-chat-container::-webkit-scrollbar{
+    display: none;
+}
+
+.all-chat-container .list-group-item{
+    background-color: transparent;
+    border-bottom: 1px solid #176b87;
+
+  
+    
+
+}
+
+.all-chat-container .list-group-item a{
+    color: #ffffff;
+    text-decoration: none;
+    
+}
+
+.all-chat-container .list-group-item a small{
+    color: #dddddd;
+}
+
+.all-chat-container .text-container{
+    width: 100%;
+    
+}
+
+.chat-header{
+    padding: 20px;
+    height: 70px;
+    background-color: #053B50;
+}
+
+.circle{
+    border-radius: 50%;
+
 }

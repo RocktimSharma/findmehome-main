@@ -1,4 +1,4 @@
-import 'bootstrap';
+//import 'bootstrap';
 
 /**
  * We'll load the axios HTTP library which allows us to easily issue requests
@@ -8,38 +8,62 @@ import 'bootstrap';
 
 import axios from 'axios';
 import Echo from 'laravel-echo';
+import Pusher from "pusher-js"
 
-window.Pusher = require('pusher-js');
-
+window.Pusher = Pusher;
+console.log('Access Token:', accessToken);
 window.Echo = new Echo({
     broadcaster: 'pusher',
-    key: process.env.MIX_PUSHER_APP_KEY,
-    cluster: process.env.MIX_PUSHER_APP_CLUSTER,
-    encrypted: true,
+    key: '0acd81df3e327c16d64f',
+    cluster: 'ap2',
+    forceTLS: true,
+    auth:{
+        headers: {
+            Accept: 'application/json',
+            Authorization: 'Bearer ' + accessToken,
+            
+        },
+    },
+    authEndpoint: '/broadcasting/auth',  // Correct authEndpoint
+          // Correct authHost
 });
+
 
 // This function is responsible for updating the chat interface with a new message
 function updateChatInterface(message) {
     // Append the received message to the chat interface
     // You can customize this part based on your chat interface structure
-    const chatMessages = document.getElementById('chatMessages'); // Replace with your chat messages container element
-    const newMessageElement = document.createElement('div');
-    newMessageElement.textContent = message.content; // Adjust this based on your message content structure
-    chatMessages.appendChild(newMessageElement);
+    let messagesList = document.getElementById('messagesList');
 
-    // Scroll to the bottom of the chat container to show the new message
-    chatMessages.scrollTop = chatMessages.scrollHeight;
+    // Create a new div element for the message
+    let messageDiv = document.createElement('div');
+console.log()
+       if(message.receiver_id==senderId && message.sender_id==receiverId){
+       
+        messageDiv.className = 'd-flex col-12 ' + (message.receiver_id === receiverId ? 'justify-content-end' : 'justify-content-start');
+    
+        // Create a nested div for the message content
+        let contentDiv = document.createElement('div');
+        contentDiv.className = 'message'+ (message.receiver_id === receiverId ? 'sent' : 'received');
+        contentDiv.textContent = message.content;
+    
+        // Append the content div to the message div
+        messageDiv.appendChild(contentDiv);
+    
+        // Append the message div to the messages list
+        messagesList.appendChild(messageDiv);
+       
+       }
+   
 }
 
-console.log('Before listening to private channel');
-window.Echo.private('findmehome').listen('MessageSent', (e) => {
+console.log('chat.'+senderId+'.'+receiverId)
+window.Echo.channel('chat').listen('MessageSent', (e) => {
     console.log('Private channel listener called');
     console.log('New message:', e.message);
-
     // Call the function to update the chat interface
-    updateChatInterface(e.message);
+     updateChatInterface(e.message);
 });
-console.log('After listening to private channel');
 
 
 window.axios = axios;

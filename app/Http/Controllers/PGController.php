@@ -46,7 +46,7 @@ class PGController extends Controller
     ->get();*/
 
     $pgs = DB::table('pgs')
-    ->select('pgs.*', 'room.room_type', 'room.room_price', 'room.amenities','room.image1','users.id')
+    ->select('pgs.*','room.room_id', 'room.room_type', 'room.room_price', 'room.amenities','room.image1','users.id')
     ->selectRaw(
         '(
             6371 * acos(

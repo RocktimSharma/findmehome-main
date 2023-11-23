@@ -1,9 +1,9 @@
 
 
-var minRoomPrice = 0; // Replace with your initial value
-var maxRoomPrice = 100000; // Replace with your initial value
-var roomType = []; // Replace with your initial value
-var amenities = []; // An empty array to store amenities
+var minRoomPrice = 0; 
+var maxRoomPrice = 100000; 
+var roomType = []; 
+var amenities = []; 
 var newLat = 0;
 var newLong = 0;
 let control;
@@ -14,12 +14,37 @@ $(document).ready(function(){
 });
 
 
+function checkForUpdates() {
+    console.log("Hello")
+    // Make an AJAX request to the server
+    $.ajax({
+        url: '/conversations/'.receiverId, 
+        method: 'GET',
+        success: function (data) {
+           
+            console.log(data)
+            // Schedule the next poll after a delay
+            setTimeout(checkForUpdates, 1000); // Poll every 5 seconds (adjust as needed)
+        },
+        error: function (error) {
+            console.error('Error checking for updates:', error);
+
+            // Retry the poll after an error
+            setTimeout(checkForUpdates, 5000);
+        }
+    });
+}
+
+
+
+
+
 document.addEventListener("DOMContentLoaded", function () {
     const map = L.map("map", {
         center: [-29.5, 145],
         zoom: 3.5,
     });
-
+    checkForUpdates()
     L.tileLayer("https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png", {
         attribution:
             '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors',
@@ -34,7 +59,7 @@ document.addEventListener("DOMContentLoaded", function () {
         navigator.geolocation.getCurrentPosition(function (position) {
             newLat = position.coords.latitude;
             newLong = position.coords.longitude;
-            // this is just a marker placed in that position
+           
             marker = L.marker([
                 position.coords.latitude,
                 position.coords.longitude,
@@ -42,7 +67,7 @@ document.addEventListener("DOMContentLoaded", function () {
             $("#latitude").val(position.coords.latitude);
             $("#longitude").val(position.coords.longitude);
             onSearch();
-            // move the map to have the location in its center
+           
             map.panTo(new L.LatLng(newLat, newLong));
         });
     }
@@ -63,19 +88,19 @@ document.addEventListener("DOMContentLoaded", function () {
         if(control){
            map.removeControl(control);
         }
-        // Update the marker's position when the map is clicked
+     
         const location = e.latlng;
 
-        // Create a marker at the selected location
+       
         marker = L.marker(location).addTo(map);
 
-        // You can also open a popup with additional information if needed
+      
         marker.bindPopup("Selected Location").openPopup();
 
-        // Set the map view to the selected location
+    
         map.setView(location, 18);
 
-        // Update the latitude and longitude input fields in your form
+        
         try {
             newLat = location.lat;
             newLong = location.lng;
@@ -209,8 +234,18 @@ document.addEventListener("DOMContentLoaded", function () {
                     
                   
                     <div class="btn-group card-footer p-0" role="group" aria-label="Basic example">
-                        <a type="button" href="/conversations/${pg.id}" class="btn chat-btn"><i class="fa-solid fa-comment"></i> Chat</a>
-                     
+
+                    <form  method="POST" action="/send/${pg.id}/${pg.room_id}">
+        <input type="hidden" name="_token" value="${csrfToken}">
+        <div class="input-group">
+            <div class="input-group-append">
+                <button type="submit" id="sendMessageButton" class="btn chat-btn">
+                    <i class="fa-solid fa-comment"></i> Chat
+                </button>
+            </div>
+        </div>
+    </form>
+                       
                         <button class="btn route-btn show-route-button" data-start-lat="${
                             pg.latitude
                         }" data-start-lng="${pg.longitude}">
@@ -279,6 +314,7 @@ document.addEventListener("DOMContentLoaded", function () {
     }
 
     // Call the function to set up route button listeners
+
 });
 
 

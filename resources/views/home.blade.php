@@ -120,5 +120,10 @@
 
 </div>
 </div>
+<script>
+    var csrfToken = "{{ csrf_token() }}";
+    console.log(csrfToken)
+</script>
+
 
 @endsection

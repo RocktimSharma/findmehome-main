@@ -18,6 +18,8 @@
         <a class="nav-link text-white" href="{{ route('register') }}">{{ __('Register') }}</a>
         </li>
         @endif @else
+        <li> <a class="nav-link text-white"  href="{{ route('allChats', ['recipientId' => ' ', 'pgId' => ' ']) }}"><i class="fa-solid fa-comment"></i> Chats</a>
+       </li>
         <li class="nav-item dropdown">
         <a id="navbarDropdown" class="nav-link dropdown-toggle text-white" href="#" role="button"
         data-bs-toggle="dropdown"
@@ -37,6 +39,7 @@
         <a href="{{ route('myPgs') }}" class="dropdown-item">
         {{ __('Your PGs') }}
         </a>
+       
         <a class="dropdown-item" href="{{ route('logout') }}" onclick="event.preventDefault();
         document.getElementById('logout-form').submit();">
         {{ __('Logout') }}

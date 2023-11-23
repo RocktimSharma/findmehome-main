@@ -4,8 +4,11 @@ namespace App\Http\Controllers;
 
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\DB;
 use App\Models\Room; // Import the Room model
 use App\Models\PG;
+use App\Models\Wishlist;
 class RoomController extends Controller
 {
     public function create($pg_id) {
@@ -33,6 +36,39 @@ class RoomController extends Controller
         $rooms = $pg->rooms;
     
         return view('rooms', ['pg' => $pg, 'rooms' => $rooms]);
+    }
+
+    public function addtoWishlist($room_id){
+        $userId= Auth::user()->id;
+        $wishlist = new Wishlist();
+        $wishlist->user_id = $userId;
+        $wishlist->room_id = $room_id;
+    
+        // Save the wishlist entry to the database
+        $wishlist->save();
+
+        return redirect()->back()->with('success',true);
+
+    }
+
+    public function removefromWishlist($room_id){
+        $userId= Auth::user()->id;
+        DB::table('wishlist')
+        ->where('user_id', $userId)
+        ->where('room_id', $room_id)
+        ->delete();
+
+        return redirect()->back()->with('success','');
+
+    }
+
+    public function displayRoom($roomId) {
+        $roomData = Room::select('room.*', 'pgs.*')
+        ->join('pgs', 'room.pg_id', '=', 'pgs.pg_id')
+        ->where('room.room_id', '=', $roomId)
+        ->first(); 
+
+        return view('room', ['room'=> $roomData]);
     }
     
     public function store(Request $request, $pg_id)

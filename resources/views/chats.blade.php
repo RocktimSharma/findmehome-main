@@ -15,7 +15,12 @@
     @if(!empty($allChats))
     @foreach($allChats as $chat)
     <li class="list-group-item px-0 mx-3">
-    <a href="/conversations/{{$chat->sender}}/{{$chat->room_id}}">
+    @if(Auth::user()->id==$chat->receiverId)
+    <a href="/conversations/{{$chat->senderId}}/{{$chat->room_id}}">
+            @else
+            <a href="/conversations/{{$chat->receiverId}}/{{$chat->room_id}}">
+            @endif
+    
         <div class="d-flex align-items-center">
             <div>
     <img src="/storage/{{$chat->image1}}" class="circle" width="40"  height="40">
@@ -24,11 +29,12 @@
 {{$chat->pg_name}}
             <small>{{$chat->room_id}}</small>
             <br>
-            @if(Auth::user()->id==$chat->sender)
-            <small>{{$chat->receiver_name}}</small>
-            @else
+            @if(Auth::user()->id==$chat->receiverId)
             <small>{{$chat->sender_name}}</small>
+            @else
+            <small>{{$chat->receiver_name}}</small>
             @endif
+            
 </div>
 
 
@@ -60,7 +66,7 @@ No Chats to Show
 </div>
 <div class="ps-1 ms-1 text-container">
 
-<small class='fs-5 mb-0'>{{$chatInfo->pg_name}}</small>
+<a href="/room/{{$chatInfo->room_id}}" class="link"><small class='fs-5 mb-0'>{{$chatInfo->pg_name}}</small></a>
 <small>{{$chatInfo->room_id}}</small><br>
                     <small class='sender-name'>{{$chatInfo->sender_name}}</small>
 </div>

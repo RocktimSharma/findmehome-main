@@ -53,19 +53,26 @@ class ChatController extends Controller
             DB::raw('MAX(usersSender.name) as sender_name'),
             DB::raw('MAX(usersReceiver.name) as receiver_name'),
             DB::raw('MAX(room.image1) as image1'),
-            DB::raw('MAX(messages.sender) as sender'), // Example: Include message.sender
-            DB::raw('MAX(messages.receiver) as receiver') // Example: Include message.receiver
+            DB::raw('MAX(messages.sender) as sender'),
+            DB::raw('MAX(messages.receiver) as receiver'),
+            DB::raw('MAX(usersSender.id) as senderId'),
+            DB::raw('MAX(usersReceiver.id) as receiverId')
         )
         ->join('room', 'room.room_id', '=', 'messages.room_id')
         ->join('pgs', 'pgs.pg_id', '=', 'room.pg_id')
-        ->join('users as usersSender', 'usersSender.id', '=', 'messages.sender')
-        ->join('users as usersReceiver', 'usersReceiver.id', '=', 'messages.receiver')
+        ->join('users as usersSender', function ($join) {
+            $join->on('usersSender.id', '=', DB::raw('CASE WHEN messages.sender < messages.receiver THEN messages.sender ELSE messages.receiver END'));
+        })
+        ->join('users as usersReceiver', function ($join) {
+            $join->on('usersReceiver.id', '=', DB::raw('CASE WHEN messages.sender > messages.receiver THEN messages.sender ELSE messages.receiver END'));
+        })
         ->where(function ($query) use ($user_id) {
             $query->where('messages.sender', $user_id)
                 ->orWhere('messages.receiver', $user_id);
         })
-        ->groupBy('messages.room_id', 'user1', 'user2', 'room.room_id') // Exclude 'room.room_id' from 'GROUP BY'
+        ->groupBy('messages.room_id', 'user1', 'user2', 'room.room_id')
         ->get();
+        
         
         
         

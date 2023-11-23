@@ -44,7 +44,7 @@ console.log()
     
         // Create a nested div for the message content
         let contentDiv = document.createElement('div');
-        contentDiv.className = 'message'+ (message.receiver_id === receiverId ? 'sent' : 'received');
+        contentDiv.className = 'message '+ (message.receiver_id === receiverId ? 'sent' : 'received');
         contentDiv.textContent = message.content;
     
         // Append the content div to the message div

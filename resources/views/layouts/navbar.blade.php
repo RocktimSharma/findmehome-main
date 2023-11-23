@@ -6,7 +6,7 @@
       class="navbar-toggler-icon"></span></button>
     <div class="collapse navbar-collapse" id="navbarSupportedContent"> <ul class="navbar-nav me-auto"> <li
       class="nav-item"> 
-      <a class="btn btn-outline-light fw-bold" data-bs-toggle="modal" data-bs-target="#exampleModal"
+      <a class="btn btn-outline-light fw-bold" data-bs-toggle="modal" data-bs-target="#mapModal"
       aria-current="page" href="#">Location</a>
      </li> </ul>
       <ul class="navbar-nav ms-auto"> <!-- Authentication Links --> 

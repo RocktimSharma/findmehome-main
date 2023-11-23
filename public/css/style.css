@@ -10,6 +10,23 @@
     min-height: 100vh;
     
 }
+.no-vscroll{
+    position: -webkit-sticky;
+    position: sticky;
+
+    height: calc(100vh - 140px);
+    top: 0;
+    overflow-y: hidden;
+}
+
+.vscroll{
+    height: calc(100vh - 140px);
+    overflow-y: scroll;
+}
+
+.vscroll::-webkit-scrollbar{
+    display: none;
+}
 .carousel-item img{
     height: 70vh;
     object-fit: cover;
@@ -29,12 +46,7 @@ nav{
     margin: 10px;
 }
 
-.chat-btn{
 
-  
-    background-color: #176b87;
-   
-}
 
 .secondary-bg{
  background-color: #eeeeee;
@@ -48,9 +60,38 @@ nav{
 
 .route-btn{
 
-
+color:#ffffff;
     background-color: #053B50;
   
+}
+
+.pg-img{
+    height: 200px;
+    max-height: 200px;
+}
+
+.chat-btn{
+    color: #ffffff;
+      
+        background-color: #176b87;
+       
+    }
+
+    .route-btn:hover{
+        background-color: #022e40;
+        color: #ffffff;
+    }
+
+    .chat-btn:hover{
+        background-color: #1e7895;
+        color: #ffffff;
+    }
+.link{
+    color: #ffffff;
+    text-decoration: none;
+}
+.link:hover{
+    text-decoration: underline;
 }
 .room-card img{
    height: 200px;
@@ -169,6 +210,21 @@ nav{
     
 }
 
+.wishlist-form{
+    border-bottom-left-radius: 100%;
+    padding-left: 10px;
+    padding-bottom:10px ;
+    background-color: #ffffff;
+}
+
+.wishlist-form .btn{
+  font-size: 1.4rem;
+}
+.wishlist-form .btn:active{
+  border: none;
+  box-sizing: 0;
+}
+
 #pgList{
     height: calc(100vh - 60px);
     overflow-y: scroll;
@@ -176,9 +232,12 @@ nav{
     -ms-overflow-style: none;
 }
 
-#pgList .chips{
-
+.transparent-chips{
+    background-color: #022e40aa;
+    color: #ffffff;
 }
+
+
 
 #pgList::-webkit-scrollbar {
     display: none;

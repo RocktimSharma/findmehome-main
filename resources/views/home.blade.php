@@ -4,12 +4,12 @@
 
 <div class=""> 
   <!-- Modal --> 
-<div class="modal fade" id="exampleModal" tabindex="-1"
-  aria-labelledby="exampleModalLabel" aria-hidden="true">
+<div class="modal fade" id="mapModal" tabindex="-1"
+  aria-labelledby="mapModalLabel" aria-hidden="true">
   <div class="modal-dialog modal-xl"> 
     <div class="modal-content"> 
       <div class="modal-header"> 
-        <h1 class="modal-title fs-5" id="exampleModalLabel">Location</h1>
+        <h1 class="modal-title fs-5" id="mapModalLabel">Location</h1>
         <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
     </div> <div class="modal-body"> <div id="map">
   </div>
@@ -46,7 +46,7 @@
 
 <div class="container-fluid content-box"  >
  
-<p class="fs-3 fw-bold m-5 mb-0">PGs Avialable near you</p>
+<p class="fs-3 fw-bold m-5 mb-0">PGs Avialable near you <span class=" fs-6 fw-normal">(within 50km)</span></p>
 <div class="container-fluid px-5 mt-4">
   <div class="row">
     <div class="col-md-2 mb-4 filter-box py-4">
@@ -72,6 +72,10 @@
           <div class="form-check form-check-inline">
             <input class="form-check-input" type="checkbox" name="roomType[]" value="Double" id="double">
             <label class="form-check-label" for="double">Double</label>
+          </div>
+          <div class="form-check form-check-inline">
+            <input class="form-check-input" type="checkbox" name="roomType[]" value="Triple" id="triple">
+            <label class="form-check-label" for="triple">Triple</label>
           </div>
           <div class="form-check form-check-inline">
             <input class="form-check-input" type="checkbox" name="roomType[]" value="" id="other">

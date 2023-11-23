@@ -9,31 +9,16 @@ var newLong = 0;
 let control;
 let startMarker;
 
+
 $(document).ready(function(){
+    try{
     $("#yourPgsTable").DataTable();
+    }catch(e){
+
+    }
+ 
 });
 
-
-function checkForUpdates() {
-    console.log("Hello")
-    // Make an AJAX request to the server
-    $.ajax({
-        url: '/conversations/'.receiverId, 
-        method: 'GET',
-        success: function (data) {
-           
-            console.log(data)
-            // Schedule the next poll after a delay
-            setTimeout(checkForUpdates, 1000); // Poll every 5 seconds (adjust as needed)
-        },
-        error: function (error) {
-            console.error('Error checking for updates:', error);
-
-            // Retry the poll after an error
-            setTimeout(checkForUpdates, 5000);
-        }
-    });
-}
 
 
 
@@ -44,7 +29,7 @@ document.addEventListener("DOMContentLoaded", function () {
         center: [-29.5, 145],
         zoom: 3.5,
     });
-    checkForUpdates()
+   
     L.tileLayer("https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png", {
         attribution:
             '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors',
@@ -139,6 +124,8 @@ document.addEventListener("DOMContentLoaded", function () {
         map.panTo(location);
     });
 
+
+    try{
     var form = document.getElementById("filterForm");
 
     // Add an event listener for the form's submit event
@@ -162,6 +149,8 @@ document.addEventListener("DOMContentLoaded", function () {
         onSearch();
     });
 
+}catch(e){}
+
     // Replace with your event listener for latitude and longitude changes
     function onSearch() {
         // Make an AJAX request to fetch PGs based on the new location
@@ -183,8 +172,13 @@ document.addEventListener("DOMContentLoaded", function () {
                 var pgList = document.getElementById("pgList");
 
                 // Clear any existing cards
-                pgList.innerHTML = "";
+                try{
 
+                
+                pgList.innerHTML = "";
+                }catch(e){
+
+                }
                 // Loop through the response and create cards
                 response.forEach(function (pg) {
                     // Create a Bootstrap card for each PG
@@ -193,75 +187,76 @@ document.addEventListener("DOMContentLoaded", function () {
 
                     var cardHtml = `
           
-                    <div class="card">
-                    <img src="storage/${pg.image1}" class="card-img-top" alt="${
-                        pg.name
-                    }">
-                  
-                    <div class="card-body">
-                    <div class="chips mb-2">
-                    ${
-                        pg.amenities
-                            ? pg.amenities
-                                  .split(",")
-                                  .map(
-                                      (amenity) => `
-                     
-                            <span class="badge rounded-pill text-bg-info">${amenity}</span>
-                        `
-                                  )
-                                  .join("")
-                            : ""
-                    }
-                </div>
-                        <div class="d-flex justify-content-between">
-                            <h5 class="card-title mb-0">${pg.name}</h5>
-                            <p class="card-text">${pg.distance.toFixed(
-                                2
-                            )} km</p>
-                        </div>
-                        <div class="d-flex justify-content-between">
-                        <small>${pg.room_type}</small>
-                        <p class="card-text"><i class="fa-solid fa-indian-rupee-sign"></i> ${
-                            pg.room_price
-                        }</p>
-                    </div>
-                        
-                        <p class="card-text"><i class="fa-solid fa-phone"></i> ${
-                            pg.contact_details
-                        }</p>
-                    </div>
-                    
-                  
-                    <div class="btn-group card-footer p-0" role="group" aria-label="Basic example">
+                    <div class="card position-relative">
+    <img src="storage/${pg.image1}" class="card-img-top pg-img" alt="${pg.name}">
+   
 
-                    <form  method="POST" action="/send/${pg.id}/${pg.room_id}">
+
+    ${
+        pg.wishlisted?
+        `<form method="POST" action="/wishlist/remove/${pg.room_id}" class="position-absolute top-0 end-0 wishlist-form">
         <input type="hidden" name="_token" value="${csrfToken}">
-        <div class="input-group">
-            <div class="input-group-append">
-                <button type="submit" id="sendMessageButton" class="btn chat-btn">
-                    <i class="fa-solid fa-comment"></i> Chat
-                </button>
-            </div>
+        <button type="submit" class="btn text-danger" >
+        <i class="fa-solid fa-heart"></i>
+        </button>
+    </form>`
+        :    `<form method="POST" action="/wishlist/add/${pg.room_id}" class="position-absolute top-0 end-0 wishlist-form">
+        <input type="hidden" name="_token" value="${csrfToken}">
+        <button type="submit" class="btn addWishlist" value="${pg.room_id}">
+        <i class="fa-regular fa-heart"></i>
+        </button>
+    </form>`
+
+
+    }
+
+
+    <div class="chips position-absolute top-0 start-0 mt-2 ms-2">
+        ${
+            pg.amenities
+                ? pg.amenities
+                    .split(",")
+                    .map((amenity) => `
+                        <span class="badge rounded-pill transparent-chips">${amenity}</span>
+                        <br>
+                    `)
+                    .join("")
+                : ""
+        }
+    </div>
+
+    <div class="card-body">
+        <div class="d-flex justify-content-between">
+       
+            <a href='/room/${pg.room_id}' class="nav-link"><h5 class="card-title mb-1">${pg.name}</h5></a>
+            <p class="card-text">${pg.distance.toFixed(2)} km</p>
         </div>
-    </form>
-                       
-                        <button class="btn route-btn show-route-button" data-start-lat="${
-                            pg.latitude
-                        }" data-start-lng="${pg.longitude}">
-                            <i class="fa-solid fa-route"></i> Show Route
-                        </button>
-                    
-                        
-                    
-                    </div>
-                
-                </div>
+        <div class="d-flex justify-content-between">
+            <small><em>Room Type: </em> <span class="fw-bold">${pg.room_type}</span></small>
+            <p class="card-text fw-bold"><i class="fa-solid fa-indian-rupee-sign"></i> ${pg.room_price}</p>
+        </div>
+        <p class="card-text"><em>Contact: </em> <span class="fw-bold">${pg.contact_details}</span></p>
+    </div>
+
+    <div class="card-footer btn-group p-0" role="group" aria-label="Basic example">
+        <form method="POST" action="/send/${pg.id}/${pg.room_id}" class="w-50">
+            <input type="hidden" name="_token" value="${csrfToken}">
+            <button type="submit" id="sendMessageButton" class="btn chat-btn w-100">
+                <i class="fa-solid fa-comment"></i> Chat
+            </button>
+        </form>
+        <button class="btn route-btn show-route-button w-50" data-start-lat="${pg.latitude}" data-start-lng="${pg.longitude}">
+            <i class="fa-solid fa-route"></i> Show Route
+        </button>
+    </div>
+</div>
+
             `;
 
                     card.innerHTML = cardHtml;
                     pgList.appendChild(card);
                     setupRouteButtonListeners();
+                //    setupAddWishlistBtnListeners()
                 });
             },
             error: function (error) {
@@ -269,6 +264,86 @@ document.addEventListener("DOMContentLoaded", function () {
             },
         });
     }
+
+
+    
+
+    try{
+        document.getElementById("pgRoute").addEventListener("click",function(){
+            var startLat = parseFloat(
+                this.getAttribute("data-start-lat")
+            );
+            var startLng = parseFloat(
+                this.getAttribute("data-start-lng")
+            );
+
+           // Coordinates for the starting and ending points
+           var startLatLng = L.latLng(startLat, startLng);
+           var endLatLng = L.latLng(newLat, newLong);
+           if (startMarker) {
+               map.removeLayer(startMarker);
+           }
+           if(control){
+              map.removeControl(control);
+           }
+           // Create a marker for the starting point
+          startMarker = L.marker(startLatLng).addTo(map);
+
+           // Create the route control
+          control = L.Routing.control({
+               waypoints: [startLatLng, endLatLng],
+               routeWhileDragging: true,
+           }).addTo(map);
+
+        
+            var myModal = new bootstrap.Modal(
+                document.getElementById("mapModal")
+            );
+            myModal.show();
+            var backdrop = document.querySelector(".modal-backdrop");
+            backdrop.parentNode.removeChild(backdrop);
+
+        })
+    }catch(e){
+    
+    }
+
+
+ /*   function setupAddWishlistBtnListeners() {
+        document
+            .querySelectorAll(".addWishlist")
+            .forEach(function (addWishlistButton) {
+                addWishlistButton.addEventListener("click", function (e) {
+                    // Retrieve the data attributes
+                      var id=this.value;
+                      console.log(id)
+                      e.preventDefault()
+                      $.ajax({
+                        url: "wishlist/add/"+id,
+                        type: "POST",
+                        dataType: 'json',
+                        data: {
+                            _token: csrfToken,
+                        },
+                        success: function (data) {
+                            // Handle success, e.g., update the UI
+                            alert('Operation successful.');
+                        },
+                        error: function (xhr, status, error) {
+                            // Handle AJAX error
+                            console.error(error);
+                           
+                        }
+                    });
+
+                });
+            });
+    }*/
+
+    // Call the function to set up route button listeners
+
+
+
 
     function setupRouteButtonListeners() {
         document
@@ -304,7 +379,7 @@ document.addEventListener("DOMContentLoaded", function () {
                  
                     // Manually open the modal
                     var myModal = new bootstrap.Modal(
-                        document.getElementById("exampleModal")
+                        document.getElementById("mapModal")
                     );
                     myModal.show();
                     var backdrop = document.querySelector(".modal-backdrop");
@@ -316,6 +391,9 @@ document.addEventListener("DOMContentLoaded", function () {
     // Call the function to set up route button listeners
 
 });
+
+
+
 
 
 

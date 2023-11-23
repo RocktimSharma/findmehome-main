@@ -29,7 +29,9 @@ class PGController extends Controller
         $amenities=$request->input('amenities');
 
         $owner = Auth::user();
-        
+        $userId = auth()->user()->id; // Replace this with your actual logic to get the current user's ID
+
+  
       /*  $pgs = DB::table('pgs')
     ->select('pgs.*', 'room.room_type', 'room.room_price', 'room.amenities')
     ->selectRaw(
@@ -46,7 +48,9 @@ class PGController extends Controller
     ->get();*/
 
     $pgs = DB::table('pgs')
-    ->select('pgs.*','room.room_id', 'room.room_type', 'room.room_price', 'room.amenities','room.image1','users.id')
+    ->select('pgs.*','room.room_id', 'room.room_type', 'room.room_price', 'room.amenities','room.image1','users.id',
+    
+    DB::raw('wishlist.room_id IS NOT NULL AS wishlisted'))
     ->selectRaw(
         '(
             6371 * acos(
@@ -57,6 +61,10 @@ class PGController extends Controller
     )
     ->join('room', 'pgs.pg_id', '=', 'room.pg_id')
     ->join('users','pgs.owner_id','=','users.id')
+    ->leftJoin('wishlist', function ($join) use ($userId) {
+        $join->on('room.room_id', '=', 'wishlist.room_id')
+            ->where('wishlist.user_id', '=', $userId);
+    })
     ->where('room.availability_status', '=', 'available')
     ->where(function ($query) use ($minRoomPrice, $maxRoomPrice, $roomTypes, $amenities,$owner) {
         if ($minRoomPrice) {
@@ -88,9 +96,10 @@ class PGController extends Controller
     })
     ->having('distance', '<', $radius)
    
-    ->get();
-
-        
+    ->get(); 
+  
+  
+    
         return response()->json($pgs);
     }
     

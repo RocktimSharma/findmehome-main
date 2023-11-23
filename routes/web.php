@@ -50,14 +50,15 @@ Route::get('/', [App\Http\Controllers\HomeController::class, 'index'])->name('ho
 
 
 Route::get('/search-pgs', 'App\Http\Controllers\PGController@search');
-
+Route::get('/room/{roomId}', 'App\Http\Controllers\RoomController@displayRoom');
 Route::group(['middleware' => ['auth']], function () {
     Route::get('/add-pg', 'App\Http\Controllers\PGController@create')->name('addPg');
     Route::post('/add-pg', 'App\Http\Controllers\PGController@store');
     Route::get('/user/pgs', 'App\Http\Controllers\UserPgController@index')->name('myPgs');
     Route::get('/room/create/{pg_id}', 'App\Http\Controllers\RoomController@create');
     Route::post('/room/store/{pg_id}', 'App\Http\Controllers\RoomController@store');
-   
+    Route::post('/wishlist/add/{room_id}', 'App\Http\Controllers\RoomController@addtoWishlist');
+    Route::post('/wishlist/remove/{room_id}', 'App\Http\Controllers\RoomController@removefromWishlist');
     Route::get('/pg/{pg_id}/rooms', 'App\Http\Controllers\RoomController@getRoomsByPG');
     Route::delete('/rooms/{room}', 'App\Http\Controllers\RoomController@destroy')->name('roomDelete');
     Route::delete('/pg/{pg}', 'App\Http\Controllers\PGController@destroy')->name('pgDelete');

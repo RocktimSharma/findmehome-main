@@ -57,11 +57,17 @@ Route::group(['middleware' => ['auth']], function () {
     Route::get('/user/pgs', 'App\Http\Controllers\UserPgController@index')->name('myPgs');
     Route::get('/room/create/{pg_id}', 'App\Http\Controllers\RoomController@create');
     Route::post('/room/store/{pg_id}', 'App\Http\Controllers\RoomController@store');
+    Route::get('/wishlist', 'App\Http\Controllers\RoomController@wishlist')->name('wishlist');
     Route::post('/wishlist/add/{room_id}', 'App\Http\Controllers\RoomController@addtoWishlist');
     Route::post('/wishlist/remove/{room_id}', 'App\Http\Controllers\RoomController@removefromWishlist');
     Route::get('/pg/{pg_id}/rooms', 'App\Http\Controllers\RoomController@getRoomsByPG');
     Route::delete('/rooms/{room}', 'App\Http\Controllers\RoomController@destroy')->name('roomDelete');
+    Route::get('/room/edit/{roomId}', 'App\Http\Controllers\RoomController@showRoomUpdate')->name('showRoomUpdate');
+    Route::post('/room/update/{roomId}', 'App\Http\Controllers\RoomController@update')->name('roomUpdate');
     Route::delete('/pg/{pg}', 'App\Http\Controllers\PGController@destroy')->name('pgDelete');
+    Route::get('/pg/edit/{pgId}', 'App\Http\Controllers\PGController@showPgUpdate')->name('showPgUpdate');
+    Route::post('/pg/update/{pgId}', 'App\Http\Controllers\PGController@update')->name('pgUpdate');
+    
 
     Route::get('/conversations/{recipientId}/{pgId}', 'App\Http\Controllers\ChatController@showConversation')->name('allChats');
     Route::post('/send/{recipientId}/{pgId}', 'App\Http\Controllers\ChatController@sendMessage')->name('conversation');

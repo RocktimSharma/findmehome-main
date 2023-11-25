@@ -1,35 +1,26 @@
-
-
-var minRoomPrice = 0; 
-var maxRoomPrice = 100000; 
-var roomType = []; 
-var amenities = []; 
+var minRoomPrice = 0;
+var maxRoomPrice = 100000;
+var roomType = [];
+var amenities = [];
 var newLat = 0;
 var newLong = 0;
 let control;
 let startMarker;
 
+$(document).ready(function () {
+    try {
+        $("#yourPgsTable").DataTable();
+    } catch (e) {}
 
-$(document).ready(function(){
-    try{
-    $("#yourPgsTable").DataTable();
-    }catch(e){
-
-    }
- 
+   
 });
-
-
-
-
-
 
 document.addEventListener("DOMContentLoaded", function () {
     const map = L.map("map", {
         center: [-29.5, 145],
         zoom: 3.5,
     });
-   
+
     L.tileLayer("https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png", {
         attribution:
             '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors',
@@ -44,15 +35,19 @@ document.addEventListener("DOMContentLoaded", function () {
         navigator.geolocation.getCurrentPosition(function (position) {
             newLat = position.coords.latitude;
             newLong = position.coords.longitude;
-           
+          
             marker = L.marker([
                 position.coords.latitude,
                 position.coords.longitude,
             ]).addTo(map);
-            $("#latitude").val(position.coords.latitude);
-            $("#longitude").val(position.coords.longitude);
+        
+                $("#latitude").val(position.coords.latitude);
+                $("#longitude").val(position.coords.longitude);
+
+       
+
             onSearch();
-           
+
             map.panTo(new L.LatLng(newLat, newLong));
         });
     }
@@ -70,22 +65,18 @@ document.addEventListener("DOMContentLoaded", function () {
         if (startMarker) {
             map.removeLayer(startMarker);
         }
-        if(control){
-           map.removeControl(control);
+        if (control) {
+            map.removeControl(control);
         }
-     
+
         const location = e.latlng;
 
-       
         marker = L.marker(location).addTo(map);
 
-      
         marker.bindPopup("Selected Location").openPopup();
 
-    
         map.setView(location, 18);
 
-        
         try {
             newLat = location.lat;
             newLong = location.lng;
@@ -106,10 +97,10 @@ document.addEventListener("DOMContentLoaded", function () {
             map.removeLayer(startMarker);
         }
 
-        if(control){
-           map.removeControl(control);
+        if (control) {
+            map.removeControl(control);
         }
-       
+
         // Get the selected location information
         const location = e.geocode.center;
 
@@ -124,32 +115,26 @@ document.addEventListener("DOMContentLoaded", function () {
         map.panTo(location);
     });
 
+    try {
+        var form = document.getElementById("filterForm");
 
-    try{
-    var form = document.getElementById("filterForm");
+        // Add an event listener for the form's submit event
+        form.addEventListener("submit", function (event) {
+            // Prevent the default form submission behavior
+            event.preventDefault();
 
-    // Add an event listener for the form's submit event
-    form.addEventListener("submit", function (event) {
-        // Prevent the default form submission behavior
-        event.preventDefault();
-
-        // Access the form field values
-        minRoomPrice = form.elements.minRoomPrice.value;
-        maxRoomPrice = form.elements.maxRoomPrice.value;
-        roomType = Array.from(
-            form.querySelectorAll('input[name="roomType[]"]:checked')
-        ).map((input) => input.value);
-        amenities = Array.from(
-            form.querySelectorAll('input[name="amenities[]"]:checked')
-        ).map((input) => input.value);
-        console.log(amenities);
-        console.log(roomType); // Get the selected amenities from your form fields (e.g., a multi-select box)
-
-        // Now you can use these values as needed, e.g., send them to your server via AJAX or perform some client-side processing.
-        onSearch();
-    });
-
-}catch(e){}
+            // Access the form field values
+            minRoomPrice = form.elements.minRoomPrice.value;
+            maxRoomPrice = form.elements.maxRoomPrice.value;
+            roomType = Array.from(
+                form.querySelectorAll('input[name="roomType[]"]:checked')
+            ).map((input) => input.value);
+            amenities = Array.from(
+                form.querySelectorAll('input[name="amenities[]"]:checked')
+            ).map((input) => input.value);
+            onSearch();
+        });
+    } catch (e) {}
 
     // Replace with your event listener for latitude and longitude changes
     function onSearch() {
@@ -167,18 +152,13 @@ document.addEventListener("DOMContentLoaded", function () {
             },
             success: function (response) {
                 // Handle the response (list of PGs)
-                console.log(response);
                 // You can update the UI with the retrieved PGs here
                 var pgList = document.getElementById("pgList");
 
                 // Clear any existing cards
-                try{
-
-                
-                pgList.innerHTML = "";
-                }catch(e){
-
-                }
+                try {
+                    pgList.innerHTML = "";
+                } catch (e) {}
                 // Loop through the response and create cards
                 response.forEach(function (pg) {
                     // Create a Bootstrap card for each PG
@@ -188,26 +168,26 @@ document.addEventListener("DOMContentLoaded", function () {
                     var cardHtml = `
           
                     <div class="card position-relative">
-    <img src="storage/${pg.image1}" class="card-img-top pg-img" alt="${pg.name}">
+    <img src="storage/${pg.image1}" class="card-img-top pg-img" alt="${
+                        pg.name
+                    }">
    
 
 
     ${
-        pg.wishlisted?
-        `<form method="POST" action="/wishlist/remove/${pg.room_id}" class="position-absolute top-0 end-0 wishlist-form">
+        pg.wishlisted
+            ? `<form method="POST" action="/wishlist/remove/${pg.room_id}" class="position-absolute top-0 end-0 wishlist-form">
         <input type="hidden" name="_token" value="${csrfToken}">
         <button type="submit" class="btn text-danger" >
         <i class="fa-solid fa-heart"></i>
         </button>
     </form>`
-        :    `<form method="POST" action="/wishlist/add/${pg.room_id}" class="position-absolute top-0 end-0 wishlist-form">
+            : `<form method="POST" action="/wishlist/add/${pg.room_id}" class="position-absolute top-0 end-0 wishlist-form">
         <input type="hidden" name="_token" value="${csrfToken}">
         <button type="submit" class="btn addWishlist" value="${pg.room_id}">
         <i class="fa-regular fa-heart"></i>
         </button>
     </form>`
-
-
     }
 
 
@@ -215,12 +195,14 @@ document.addEventListener("DOMContentLoaded", function () {
         ${
             pg.amenities
                 ? pg.amenities
-                    .split(",")
-                    .map((amenity) => `
+                      .split(",")
+                      .map(
+                          (amenity) => `
                         <span class="badge rounded-pill transparent-chips">${amenity}</span>
                         <br>
-                    `)
-                    .join("")
+                    `
+                      )
+                      .join("")
                 : ""
         }
     </div>
@@ -228,14 +210,22 @@ document.addEventListener("DOMContentLoaded", function () {
     <div class="card-body">
         <div class="d-flex justify-content-between">
        
-            <a href='/room/${pg.room_id}' class="nav-link"><h5 class="card-title mb-1">${pg.name}</h5></a>
+            <a href='/room/${
+                pg.room_id
+            }' class="nav-link"><h5 class="card-title mb-1">${pg.name}</h5></a>
             <p class="card-text">${pg.distance.toFixed(2)} km</p>
         </div>
         <div class="d-flex justify-content-between">
-            <small><em>Room Type: </em> <span class="fw-bold">${pg.room_type}</span></small>
-            <p class="card-text fw-bold"><i class="fa-solid fa-indian-rupee-sign"></i> ${pg.room_price}</p>
+            <small><em>Room Type: </em> <span class="fw-bold">${
+                pg.room_type
+            }</span></small>
+            <p class="card-text fw-bold"><i class="fa-solid fa-indian-rupee-sign"></i> ${
+                pg.room_price
+            }</p>
         </div>
-        <p class="card-text"><em>Contact: </em> <span class="fw-bold">${pg.contact_details}</span></p>
+        <p class="card-text"><em>Contact: </em> <span class="fw-bold">${
+            pg.contact_details
+        }</span></p>
     </div>
 
     <div class="card-footer btn-group p-0" role="group" aria-label="Basic example">
@@ -245,7 +235,9 @@ document.addEventListener("DOMContentLoaded", function () {
                 <i class="fa-solid fa-comment"></i> Chat
             </button>
         </form>
-        <button class="btn route-btn show-route-button w-50" data-start-lat="${pg.latitude}" data-start-lng="${pg.longitude}">
+        <button class="btn route-btn show-route-button w-50" data-start-lat="${
+            pg.latitude
+        }" data-start-lng="${pg.longitude}">
             <i class="fa-solid fa-route"></i> Show Route
         </button>
     </div>
@@ -256,7 +248,7 @@ document.addEventListener("DOMContentLoaded", function () {
                     card.innerHTML = cardHtml;
                     pgList.appendChild(card);
                     setupRouteButtonListeners();
-                //    setupAddWishlistBtnListeners()
+                    //    setupAddWishlistBtnListeners()
                 });
             },
             error: function (error) {
@@ -265,51 +257,41 @@ document.addEventListener("DOMContentLoaded", function () {
         });
     }
 
+    try {
+        document
+            .getElementById("pgRoute")
+            .addEventListener("click", function () {
+                var startLat = parseFloat(this.getAttribute("data-start-lat"));
+                var startLng = parseFloat(this.getAttribute("data-start-lng"));
 
-    
+                // Coordinates for the starting and ending points
+                var startLatLng = L.latLng(startLat, startLng);
+                var endLatLng = L.latLng(newLat, newLong);
+                if (startMarker) {
+                    map.removeLayer(startMarker);
+                }
+                if (control) {
+                    map.removeControl(control);
+                }
+                // Create a marker for the starting point
+                startMarker = L.marker(startLatLng).addTo(map);
 
-    try{
-        document.getElementById("pgRoute").addEventListener("click",function(){
-            var startLat = parseFloat(
-                this.getAttribute("data-start-lat")
-            );
-            var startLng = parseFloat(
-                this.getAttribute("data-start-lng")
-            );
+                // Create the route control
+                control = L.Routing.control({
+                    waypoints: [startLatLng, endLatLng],
+                    routeWhileDragging: true,
+                }).addTo(map);
 
-           // Coordinates for the starting and ending points
-           var startLatLng = L.latLng(startLat, startLng);
-           var endLatLng = L.latLng(newLat, newLong);
-           if (startMarker) {
-               map.removeLayer(startMarker);
-           }
-           if(control){
-              map.removeControl(control);
-           }
-           // Create a marker for the starting point
-          startMarker = L.marker(startLatLng).addTo(map);
+                var myModal = new bootstrap.Modal(
+                    document.getElementById("mapModal")
+                );
+                myModal.show();
+                var backdrop = document.querySelector(".modal-backdrop");
+                backdrop.parentNode.removeChild(backdrop);
+            });
+    } catch (e) {}
 
-           // Create the route control
-          control = L.Routing.control({
-               waypoints: [startLatLng, endLatLng],
-               routeWhileDragging: true,
-           }).addTo(map);
-
-        
-            var myModal = new bootstrap.Modal(
-                document.getElementById("mapModal")
-            );
-            myModal.show();
-            var backdrop = document.querySelector(".modal-backdrop");
-            backdrop.parentNode.removeChild(backdrop);
-
-        })
-    }catch(e){
-    
-    }
-
-
- /*   function setupAddWishlistBtnListeners() {
+    /*   function setupAddWishlistBtnListeners() {
         document
             .querySelectorAll(".addWishlist")
             .forEach(function (addWishlistButton) {
@@ -342,9 +324,6 @@ document.addEventListener("DOMContentLoaded", function () {
 
     // Call the function to set up route button listeners
 
-
-
-
     function setupRouteButtonListeners() {
         document
             .querySelectorAll(".show-route-button")
@@ -364,19 +343,18 @@ document.addEventListener("DOMContentLoaded", function () {
                     if (startMarker) {
                         map.removeLayer(startMarker);
                     }
-                    if(control){
-                       map.removeControl(control);
+                    if (control) {
+                        map.removeControl(control);
                     }
                     // Create a marker for the starting point
-                   startMarker = L.marker(startLatLng).addTo(map);
+                    startMarker = L.marker(startLatLng).addTo(map);
 
                     // Create the route control
-                   control = L.Routing.control({
+                    control = L.Routing.control({
                         waypoints: [startLatLng, endLatLng],
                         routeWhileDragging: true,
                     }).addTo(map);
 
-                 
                     // Manually open the modal
                     var myModal = new bootstrap.Modal(
                         document.getElementById("mapModal")
@@ -389,13 +367,4 @@ document.addEventListener("DOMContentLoaded", function () {
     }
 
     // Call the function to set up route button listeners
-
 });
-
-
-
-
-
-
-
-

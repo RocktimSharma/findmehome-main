@@ -30,10 +30,8 @@
         <div class="dropdown-menu dropdown-menu-end" aria-labelledby="navbarDropdown">
        
 
-        <a class="dropdown-item">
-        {{ __('Account') }}
-        </a>
-        <a class="dropdown-item">
+        
+        <a class="dropdown-item" href="{{ route('wishlist') }}">
         {{ __('Wishlist') }}
         </a>
         <a href="{{ route('myPgs') }}" class="dropdown-item">

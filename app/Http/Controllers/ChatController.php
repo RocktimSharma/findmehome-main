@@ -74,14 +74,6 @@ class ChatController extends Controller
         ->get();
         
         
-        
-        
-        
-    
-    
-      
-    
-      
         if(!empty(trim($receiverId)) || !empty(trim($roomId))) {
   
             $chatInfo = Message::select(

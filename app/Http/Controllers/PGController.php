@@ -117,6 +117,41 @@ public function destroy(PG $pg)
     return redirect()->back()->with('success', 'Room deleted successfully.');
 }
 
+public function showPgUpdate($pgId)
+{
+    $pg = PG::find($pgId);
+    return view('editPg', ['pg' => $pg]);
+}
+
+public function update(Request $request, $pgId){
+    $validatedData = $request->validate([
+        'name' => 'required|string',
+        'latitude' => 'required|string',
+        'longitude' => 'required|string',
+        'contact_details' => 'required|string',
+        'rules_restrictions' => 'required|string',
+        'description' => 'required|string',
+     
+       
+    ]);
+
+   $pg=PG::find( $pgId );
+    // Create a new Pg model instance and populate it with the validated data
+       // Handle image upload
+
+    $pg->update($validatedData);
+
+    // Save the map coordinates
+    $pg->latitude = $request->input('latitude');
+    $pg->longitude = $request->input('longitude');
+
+    $pg->save();
+
+    return redirect()->back()->with('success','PG updated successfully');
+
+ 
+}
+
 public function store(Request $request)
 {
 

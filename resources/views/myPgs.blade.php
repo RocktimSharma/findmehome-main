@@ -9,7 +9,11 @@
     <div class="d-flex justify-content-between align-items-center">
     <p class="fs-2 fw-bold mt-3">Your PGs</p>
     <a href="{{route('addPg')}}" class="btn primary-btn"><i class="fa-solid fa-plus"></i> Add PG</a>
+   
 </div>
+@if(session('success'))
+        <div class="alert alert-success">{{ session('success') }}</div>
+        @endif
     <table id="yourPgsTable" class="table datatable table-striped" style="width:100%">
     <thead>
         <tr>

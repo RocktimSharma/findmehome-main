@@ -147,7 +147,17 @@ public function update(Request $request, $pgId){
 
     $pg->save();
 
-    return redirect()->back()->with('success','PG updated successfully');
+ //   return redirect()->back()->with('success','PG updated successfully');
+ $userId = auth()->user()->id;
+            // $userId now contains the ID of the authenticated user
+         
+         
+            // Use Eloquent to fetch PGs with the specified owner_id
+            $pgs = PG::where('owner_id', $userId)->get();
+         
+
+        
+            return redirect()->route('myPgs')->with(['pgs' => $pgs, 'success' => 'PG updated successfully']);
 
  
 }
@@ -188,7 +198,16 @@ public function store(Request $request)
         try {
             $pg->save();
          
-           return redirect('/add-pg')->with('success', 'PG created successfully!');
+         //  return redirect('/add-pg')->with('success', 'PG created successfully!');
+         $userId = auth()->user()->id;
+            // $userId now contains the ID of the authenticated user
+         
+         
+            // Use Eloquent to fetch PGs with the specified owner_id
+            $pgs = PG::where('owner_id', $userId)->get();
+         
+            return redirect()->route('myPgs')->with(['pgs' => $pgs, 'success' => 'PG added successfully']);
+
             
         } catch (\Exception $e) {
             echo $e;

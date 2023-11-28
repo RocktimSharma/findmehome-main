@@ -100,8 +100,17 @@ class RoomController extends Controller
 
 
         $room->save();
+        $pg_id=$room->pg_id;
+        $pg = PG::find($pg_id);
+        if (!$pg) {
+           
+        }
 
-        return redirect()->back()->with('success', 'Room updated successfully!');
+       
+        $rooms = $pg->rooms;
+
+     
+        return redirect()->route('pgRooms', ['pg_id' => $pg_id])->with(['pg' => $pg, 'rooms' => $rooms, 'success' => 'Room updated successfully']);
         
  
     }
@@ -200,32 +209,33 @@ class RoomController extends Controller
             $imagePath = $request->file('image4')->store('pgs-images', 'public');
             $validatedData['image4'] = $imagePath;
         }
-        // Create a new Room model instance and populate it with the validated data
-/*$room = new Room([
-    'image1'=> $validatedData['image1'],
-    'image2'=> $validatedData['image2'],
-    'image3'=> $validatedData['image3'],
-    'image4'=> $validatedData['image4'],
-    'room_type' => $validatedData['room_type'],
-    'amenities' => $amenities,
-    'room_price' => $validatedData['room_price'], // Make sure this is correctly set
-    'availability_status' => $validatedData['availability_status'], // Make sure this is correctly set
-]);*/
+       
 
         $room = new Room($validatedData);
 
         $room->amenities = $amenities;
 
 
-        $room->pg_id = $pg_id; // Set the pg_id from the URL
+        $room->pg_id = $pg_id;
 
-        // Save the Room to the database
+      
         $room->save();
 
-        // Redirect to a success page or return a response
-        // ...
+       
+        $pg = PG::find($pg_id);
+       // dd($pg);
+        if (!$pg) {
+           
+        }
 
-        return redirect()->back()->with('success', 'Room created successfully!');
+        // Retrieve all rooms associated with the PG
+        $rooms = $pg->rooms;
+
+    //    return redirect()->with('success',"Room created successfully");
+
+        return redirect()->route('pgRooms', ['pg_id' => $pg_id])->with(['pg' => $pg, 'rooms' => $rooms, 'success' => 'Room added successfully']);
+
+ 
     }
 
     public function wishlist(){

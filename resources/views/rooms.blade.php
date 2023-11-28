@@ -9,7 +9,9 @@
         <div class="d-flex justify-content-between align-items-center">
             <p class="fs-3 fw-bold mt-3">{{$pg->name}}</p> <a href="/room/create/{{ $pg->pg_id }}" class="btn
                 primary-btn"><i class="fa-solid fa-plus"></i> Add Room</a> </div>
-
+                @if(session('success'))
+        <div class="alert alert-success">{{ session('success') }}</div>
+        @endif
             <div class="row"> @if(count($rooms)>0)
                 @foreach ($rooms as $room)
                 <div class="col-md-4 mb-3">

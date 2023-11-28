@@ -60,7 +60,7 @@ Route::group(['middleware' => ['auth']], function () {
     Route::get('/wishlist', 'App\Http\Controllers\RoomController@wishlist')->name('wishlist');
     Route::post('/wishlist/add/{room_id}', 'App\Http\Controllers\RoomController@addtoWishlist');
     Route::post('/wishlist/remove/{room_id}', 'App\Http\Controllers\RoomController@removefromWishlist');
-    Route::get('/pg/{pg_id}/rooms', 'App\Http\Controllers\RoomController@getRoomsByPG');
+    Route::get('/pg/{pg_id}/rooms', 'App\Http\Controllers\RoomController@getRoomsByPG')->name("pgRooms");
     Route::delete('/rooms/{room}', 'App\Http\Controllers\RoomController@destroy')->name('roomDelete');
     Route::get('/room/edit/{roomId}', 'App\Http\Controllers\RoomController@showRoomUpdate')->name('showRoomUpdate');
     Route::post('/room/update/{roomId}', 'App\Http\Controllers\RoomController@update')->name('roomUpdate');
